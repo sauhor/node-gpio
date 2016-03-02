@@ -1,28 +1,54 @@
+var http = require('http');
 var fs = require('fs');
 
 var red_pin = 13
 var green_pin = 19
 var blue_pin = 26
 
-fs.writeFileSync('/sys/class/gpio/export', red_pin);
-fs.writeFileSync('/sys/class/gpio/export', green_pin);
-fs.writeFileSync('/sys/class/gpio/export', blue_pin);
+http.createServer(function (request, response) {
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.end('Hello World\n');
+}).listen(8124);
 
-fs.writeFileSync('/sys/class/gpio/gpio'+red_pin+'/direction', 'out');
-fs.writeFileSync('/sys/class/gpio/gpio'+green_pin+'/direction', 'out');
-fs.writeFileSync('/sys/class/gpio/gpio'+blue_pin+'/direction', 'out');
+function redOn() {
+    fs.writeFileSync('/sys/class/gpio/export', red_pin);
+    fs.writeFileSync('/sys/class/gpio/gpio'+red_pin+'/direction', 'out');
+    fs.writeFileSync('/sys/class/gpio/gpio'+red_pin+'/value', 1);
+}
 
-fs.writeFileSync('/sys/class/gpio/gpio'+red_pin+'/value', 1);
-fs.writeFileSync('/sys/class/gpio/gpio'+green_pin+'/value', 1);
-fs.writeFileSync('/sys/class/gpio/gpio'+blue_pin+'/value', 1);
+function greenOn() {
+    fs.writeFileSync('/sys/class/gpio/export', green_pin);
+    fs.writeFileSync('/sys/class/gpio/gpio'+green_pin+'/direction', 'out');
+    fs.writeFileSync('/sys/class/gpio/gpio'+green_pin+'/value', 1);
+}
 
+function blueOn() {
+    fs.writeFileSync('/sys/class/gpio/export', blue_pin);
+    fs.writeFileSync('/sys/class/gpio/gpio'+blue_pin+'/direction', 'out');
+    fs.writeFileSync('/sys/class/gpio/gpio'+blue_pin+'/value', 1);
+}
+
+function redOff() {
+    fs.writeFileSync('/sys/class/gpio/export', red_pin);
+    fs.writeFileSync('/sys/class/gpio/gpio'+red_pin+'/direction', 'out');
+    fs.writeFileSync('/sys/class/gpio/gpio'+red_pin+'/value', 0);
+}
+
+function greenOff() {
+    fs.writeFileSync('/sys/class/gpio/export', green_pin);
+    fs.writeFileSync('/sys/class/gpio/gpio'+green_pin+'/direction', 'out');
+    fs.writeFileSync('/sys/class/gpio/gpio'+green_pin+'/value', 0);
+}
+
+function blueOff() {
+    fs.writeFileSync('/sys/class/gpio/export', blue_pin);
+    fs.writeFileSync('/sys/class/gpio/gpio'+blue_pin+'/direction', 'out');
+    fs.writeFileSync('/sys/class/gpio/gpio'+blue_pin+'/value', 0);
+}
+
+redOn();
 
 setTimeout(function(){
-    fs.writeFileSync('/sys/class/gpio/gpio'+red_pin+'/value', 0);
-    fs.writeFileSync('/sys/class/gpio/gpio'+green_pin+'/value', 0);
-    fs.writeFileSync('/sys/class/gpio/gpio'+blue_pin+'/value', 0);
-	fs.writeFileSync('/sys/class/gpio/unexport', 13);
-	fs.writeFileSync('/sys/class/gpio/unexport', 19);
-	fs.writeFileSync('/sys/class/gpio/unexport', 26);
+    redOff();
 }, 2000);
 
